@@ -4,12 +4,11 @@ namespace EnhancedCollections;
 
 public class RankedCollection<T> : ICollection<T> where T : notnull
 {
-    //at least have to implement IEnumerable to override w rank order
     readonly List<RankedItem<T>> items = new();
 
-    public int Count => throw new NotImplementedException();
+    public int Count => items.Count();
 
-    public bool IsReadOnly => throw new NotImplementedException();
+    public bool IsReadOnly => false;
 
     public IRankedItem<T> this[int i] => items[i];
 
@@ -20,7 +19,7 @@ public class RankedCollection<T> : ICollection<T> where T : notnull
         items.Add(rankedItem);
     }
 
-    public void Remove(T item)
+    public bool Remove(T item)
     {
         var i = items.Find(ri => ri.Item.Equals(item));
         if(i is RankedItem<T> ri)
@@ -28,12 +27,9 @@ public class RankedCollection<T> : ICollection<T> where T : notnull
             ri.RankChanged -= RankedItem_RankChanged;
             items.Remove(i);
             //TODO shift remaining ranks
+            return true;
         }
-    }
-
-    bool ICollection<T>.Remove(T item)
-    {
-        throw new NotImplementedException();
+        return false;
     }
 
     private int RankedItem_RankChanged(IRankedItem<T> item, int desiredRank)
@@ -46,26 +42,12 @@ public class RankedCollection<T> : ICollection<T> where T : notnull
         return desiredRank;
     }
 
-    public List<T> ToList()
-    {
-        throw new NotImplementedException();
-    }
+    public void Clear() => items.Clear();
 
-    public void Clear()
-    {
-        throw new NotImplementedException();
-    }
+    public bool Contains(T item) => items.Find(ri => ri.Item.Equals(item)) is not null;
 
-    public bool Contains(T item)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void CopyTo(T[] array, int arrayIndex)
-    {
-        throw new NotImplementedException();
-    }
-
+    public void CopyTo(T[] array, int arrayIndex) =>
+        items.Select(ri => ri.Item).ToList().CopyTo(array, arrayIndex);
 
     public IEnumerator<T> GetEnumerator()
     {
@@ -129,32 +111,3 @@ internal class RankedItem<T> : IRankedItem<T> where T : notnull
 
     public static implicit operator T(RankedItem<T> rankedItem) => rankedItem.Item;
 }
-
-/*
- *  shiftUp(item: IRankedContestant): void {
-        this.shiftContestant(item, -1);
-    }
-
-    shiftDown(item: IRankedContestant): void {
-        this.shiftContestant(item, 1);
-    }
-
-    private shiftContestant(item: IRankedContestant, offset: number): void {
-        let newRank: number = item.rank + offset;
-        let ubound: number = this.findMaxRank();
-        if (newRank >= 0 && newRank <= ubound) {
-
-            let displaced = this.rankings.find(c => c.rank == newRank);
-            displaced.rank = item.rank;
-            item.rank = newRank;
-
-            this.rankings.$save(displaced);
-            this.rankings.$save(item);
-        }
-    }
-
-    private findMaxRank(): number {
-        const ranks: number[] = this.rankings.map(r => <number>r.rank);
-        return Math.max(...ranks);
-    }
- */
