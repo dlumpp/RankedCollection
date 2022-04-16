@@ -30,6 +30,6 @@ public class CollectionImplementationTests
 
         var arr = new RankedItem<char>[sut.Count];
         sut.CopyTo(arr, 0);
-        arr[0].Item.Should().Be('c');
+        arr[0].Value.Should().Be('c');
     }
 }

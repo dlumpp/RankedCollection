@@ -33,13 +33,13 @@ public class RankedItem
 
 public class RankedItem<T> : RankedItem
 {
-    public T Item { get; }
+    public T Value { get; }
 
-    internal RankedItem(T item)
+    internal RankedItem(T value)
     {
-        Item = item;
+        Value = value;
     }
 
-    public static implicit operator T(RankedItem<T> rankedItem) => rankedItem.Item;
-    public static implicit operator RankedItem<T>(T item) => new RankedItem<T>(item);
+    public static implicit operator T(RankedItem<T> rankedItem) => rankedItem.Value;
+    public static implicit operator RankedItem<T>(T value) => new (value);
 }

@@ -21,7 +21,7 @@ public class RankedCollection<T> : ICollection<RankedItem<T>> where T : notnull
 
     public bool Remove(RankedItem<T> item)
     {
-        var i = items.Find(ri => ri.Item.Equals(item.Item));
+        var i = items.Find(ri => ri.Value.Equals(item.Value));
         if(i is RankedItem<T> ri)
         {
             ri.RankChanged -= RankedItem_RankChanged;
@@ -44,7 +44,7 @@ public class RankedCollection<T> : ICollection<RankedItem<T>> where T : notnull
 
     public void Clear() => items.Clear();
 
-    public bool Contains(RankedItem<T> item) => items.Find(ri => ri.Item.Equals(item.Item)) is not null;
+    public bool Contains(RankedItem<T> item) => items.Find(ri => ri.Value.Equals(item.Value)) is not null;
 
     public void CopyTo(RankedItem<T>[] array, int arrayIndex) =>
         items.CopyTo(array, arrayIndex);

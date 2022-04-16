@@ -20,15 +20,15 @@ public class PromoteDemoteTests
 
         RankedItem<string> ye = sut[0];
         ye.Rank.Should().Be(1);
-        ye.Item.Should().Be("Kanye");
+        ye.Value.Should().Be("Kanye");
 
         RankedItem<string> hov = sut[1];
         hov.Rank.Should().Be(2);
-        hov.Item.Should().Be("Jay-Z");
+        hov.Value.Should().Be("Jay-Z");
 
         RankedItem<string> biggie = sut[2];
         biggie.Rank.Should().Be(3);
-        biggie.Item.Should().Be("Notorious B.I.G.");
+        biggie.Value.Should().Be("Notorious B.I.G.");
     }
 
     [Fact]
