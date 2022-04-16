@@ -2,7 +2,7 @@
 
 namespace EnhancedCollections;
 
-public class RankedCollection<T> : ICollection<T> where T : notnull
+public class RankedCollection<T> : ICollection<RankedItem<T>> where T : notnull
 {
     readonly List<RankedItem<T>> items = new();
 
@@ -10,18 +10,18 @@ public class RankedCollection<T> : ICollection<T> where T : notnull
 
     public bool IsReadOnly => false;
 
-    public IRankedItem<T> this[int i] => items[i];
+    public RankedItem<T> this[int i] => items[i];
 
-    public void Add(T item)
+    public void Add(RankedItem<T> item)
     {
-        var rankedItem = new RankedItem<T>(item, items.Count + 1);
-        rankedItem.RankChanged += RankedItem_RankChanged;
-        items.Add(rankedItem);
+        item.SetRank(items.Count + 1);
+        item.RankChanged += RankedItem_RankChanged;
+        items.Add(item);
     }
 
-    public bool Remove(T item)
+    public bool Remove(RankedItem<T> item)
     {
-        var i = items.Find(ri => ri.Item.Equals(item));
+        var i = items.Find(ri => ri.Value.Equals(item.Value));
         if(i is RankedItem<T> ri)
         {
             ri.RankChanged -= RankedItem_RankChanged;
@@ -32,7 +32,7 @@ public class RankedCollection<T> : ICollection<T> where T : notnull
         return false;
     }
 
-    private int RankedItem_RankChanged(IRankedItem<T> item, int desiredRank)
+    private int RankedItem_RankChanged(RankedItem item, int desiredRank)
     {
         var displaced = items.Find(ri => ri.Rank == desiredRank);
         if (displaced is null)
@@ -44,18 +44,12 @@ public class RankedCollection<T> : ICollection<T> where T : notnull
 
     public void Clear() => items.Clear();
 
-    public bool Contains(T item) => items.Find(ri => ri.Item.Equals(item)) is not null;
+    public bool Contains(RankedItem<T> item) => items.Find(ri => ri.Value.Equals(item.Value)) is not null;
 
-    public void CopyTo(T[] array, int arrayIndex) =>
-        items.Select(ri => ri.Item).ToList().CopyTo(array, arrayIndex);
+    public void CopyTo(RankedItem<T>[] array, int arrayIndex) =>
+        items.CopyTo(array, arrayIndex);
 
-    public IEnumerator<T> GetEnumerator()
-    {
-        throw new NotImplementedException();
-    }
+    public IEnumerator<RankedItem<T>> GetEnumerator() => items.OrderByDescending(i => i.Rank).GetEnumerator();
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        throw new NotImplementedException();
-    }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
