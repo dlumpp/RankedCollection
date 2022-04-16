@@ -31,7 +31,7 @@ public class RankedItem
     internal void SetRank(int i) => _rank = i;
 }
 
-public class RankedItem<T> : RankedItem
+public class RankedItem<T> : RankedItem where T : notnull
 {
     public T Value { get; }
 
