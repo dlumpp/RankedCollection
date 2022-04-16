@@ -18,15 +18,15 @@ public class PromoteDemoteTests
     {
         var sut = CreateTestSubject();
 
-        IRankedItem<string> ye = sut[0];
+        RankedItem<string> ye = sut[0];
         ye.Rank.Should().Be(1);
         ye.Item.Should().Be("Kanye");
 
-        IRankedItem<string> hov = sut[1];
+        RankedItem<string> hov = sut[1];
         hov.Rank.Should().Be(2);
         hov.Item.Should().Be("Jay-Z");
 
-        IRankedItem<string> biggie = sut[2];
+        RankedItem<string> biggie = sut[2];
         biggie.Rank.Should().Be(3);
         biggie.Item.Should().Be("Notorious B.I.G.");
     }
@@ -35,7 +35,7 @@ public class PromoteDemoteTests
     public void PromoteOnce()
     {
         var sut = CreateTestSubject();
-        IRankedItem<string> hov = sut[1];
+        RankedItem<string> hov = sut[1];
         hov.Rank.Should().Be(2);
         hov.Promote();
         hov.Rank.Should().Be(1);
@@ -45,7 +45,7 @@ public class PromoteDemoteTests
     public void PromoteTwiceInBounds()
     {
         var sut = CreateTestSubject();
-        IRankedItem<string> biggie = sut[2];
+        RankedItem<string> biggie = sut[2];
         biggie.Rank.Should().Be(3);
         biggie.Promote();
         biggie.Promote();
@@ -56,7 +56,7 @@ public class PromoteDemoteTests
     public void PromoteOnceOutOfBounds()
     {
         var sut = CreateTestSubject();
-        IRankedItem<string> ye = sut[0];
+        RankedItem<string> ye = sut[0];
         ye.Rank.Should().Be(1);
         ye.Promote();
         ye.Rank.Should().Be(1);
@@ -66,7 +66,7 @@ public class PromoteDemoteTests
     public void DemoteOnce()
     {
         var sut = CreateTestSubject();
-        IRankedItem<string> hov = sut[1];
+        RankedItem<string> hov = sut[1];
         hov.Rank.Should().Be(2);
         hov.Demote();
         hov.Rank.Should().Be(3);
@@ -76,7 +76,7 @@ public class PromoteDemoteTests
     public void DemoteTwiceInBounds()
     {
         var sut = CreateTestSubject();
-        IRankedItem<string> ye = sut[0];
+        RankedItem<string> ye = sut[0];
         ye.Rank.Should().Be(1);
         ye.Demote();
         ye.Demote();
@@ -87,7 +87,7 @@ public class PromoteDemoteTests
     public void DemoteOnceOutOfBounds()
     {
         var sut = CreateTestSubject();
-        IRankedItem<string> biggie = sut[2];
+        RankedItem<string> biggie = sut[2];
         biggie.Rank.Should().Be(3);
         biggie.Demote();
         biggie.Rank.Should().Be(3);
