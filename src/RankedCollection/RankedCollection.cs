@@ -49,13 +49,7 @@ public class RankedCollection<T> : ICollection<RankedItem<T>> where T : notnull
     public void CopyTo(RankedItem<T>[] array, int arrayIndex) =>
         items.CopyTo(array, arrayIndex);
 
-    public IEnumerator<RankedItem<T>> GetEnumerator()
-    {
-        throw new NotImplementedException();
-    }
+    public IEnumerator<RankedItem<T>> GetEnumerator() => items.OrderByDescending(i => i.Rank).GetEnumerator();
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        throw new NotImplementedException();
-    }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

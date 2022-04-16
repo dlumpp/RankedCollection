@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using EnhancedCollections;
 using FluentAssertions;
 using Xunit;
@@ -9,7 +10,7 @@ public class CollectionImplementationTests
 {
     [Fact]
     public void ICollectionImplemented()
-    {        
+    {
         ICollection<RankedItem<char>> sut = new RankedCollection<char>();
 
         sut.Add('a');
@@ -31,5 +32,21 @@ public class CollectionImplementationTests
         var arr = new RankedItem<char>[sut.Count];
         sut.CopyTo(arr, 0);
         arr[0].Value.Should().Be('c');
+    }
+
+    [Fact]
+    public void EnumeratesInRankDescendingOrder()
+    {
+        var sut = new RankedCollection<string>() {
+            "Turkey",
+            "Bacon",
+            "Ham"
+        };
+        sut[1].Promote();
+        sut.Select(ri => ri.Value).Should().BeEquivalentTo(new[]{
+            "Bacon",
+            "Turkey",
+            "Ham"
+            });
     }
 }
