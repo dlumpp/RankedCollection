@@ -1,12 +1,20 @@
 using EnhancedCollections;
 using FluentAssertions;
+using System;
 using System.Linq;
 using Xunit;
 
 namespace RankedList.UnitTest;
 
-public class PromoteDemoteTests
+public class PromoteDemoteTests : IDisposable
 {
+    readonly RankedCollection<string> _sut;
+
+    public PromoteDemoteTests()
+    {
+        _sut = CreateTestSubject();
+    }
+
     static RankedCollection<string> CreateTestSubject() => new()
     {
         "Kanye",
@@ -17,17 +25,15 @@ public class PromoteDemoteTests
     [Fact]
     public void ItemsAddInAscendingOrder()
     {
-        var sut = CreateTestSubject();
-
-        RankedItem<string> ye = sut[0];
+        RankedItem<string> ye = _sut[0];
         ye.Rank.Should().Be(1);
         ye.Value.Should().Be("Kanye");
 
-        RankedItem<string> hov = sut[1];
+        RankedItem<string> hov = _sut[1];
         hov.Rank.Should().Be(2);
         hov.Value.Should().Be("Jay-Z");
 
-        RankedItem<string> biggie = sut[2];
+        RankedItem<string> biggie = _sut[2];
         biggie.Rank.Should().Be(3);
         biggie.Value.Should().Be("Notorious B.I.G.");
     }
@@ -35,8 +41,7 @@ public class PromoteDemoteTests
     [Fact]
     public void PromoteOnce()
     {
-        var sut = CreateTestSubject();
-        RankedItem<string> hov = sut[1];
+        RankedItem<string> hov = _sut[1];
         hov.Rank.Should().Be(2);
         hov.Promote();
         hov.Rank.Should().Be(1);
@@ -45,8 +50,7 @@ public class PromoteDemoteTests
     [Fact]
     public void PromoteTwiceInBounds()
     {
-        var sut = CreateTestSubject();
-        RankedItem<string> biggie = sut[2];
+        RankedItem<string> biggie = _sut[2];
         biggie.Rank.Should().Be(3);
         biggie.Promote();
         biggie.Promote();
@@ -56,8 +60,7 @@ public class PromoteDemoteTests
     [Fact]
     public void PromoteOnceOutOfBounds()
     {
-        var sut = CreateTestSubject();
-        RankedItem<string> ye = sut[0];
+        RankedItem<string> ye = _sut[0];
         ye.Rank.Should().Be(1);
         ye.Promote();
         ye.Rank.Should().Be(1);
@@ -66,19 +69,16 @@ public class PromoteDemoteTests
     [Fact]
     public void DemoteOnce()
     {
-        var sut = CreateTestSubject();
-        RankedItem<string> hov = sut[1];
+        RankedItem<string> hov = _sut[1];
         hov.Rank.Should().Be(2);
         hov.Demote();
         hov.Rank.Should().Be(3);
-        sut.Select(x => x.Rank).Should().Equal(1, 2, 3);
     }
 
     [Fact]
     public void DemoteTwiceInBounds()
     {
-        var sut = CreateTestSubject();
-        RankedItem<string> ye = sut[0];
+        RankedItem<string> ye = _sut[0];
         ye.Rank.Should().Be(1);
         ye.Demote();
         ye.Demote();
@@ -88,10 +88,14 @@ public class PromoteDemoteTests
     [Fact]
     public void DemoteOnceOutOfBounds()
     {
-        var sut = CreateTestSubject();
-        RankedItem<string> biggie = sut[2];
+        RankedItem<string> biggie = _sut[2];
         biggie.Rank.Should().Be(3);
         biggie.Demote();
         biggie.Rank.Should().Be(3);
+    }
+
+    public void Dispose()
+    {
+        _sut.Select(x => x.Rank).Should().Equal(Enumerable.Range(1, _sut.Count));
     }
 }
