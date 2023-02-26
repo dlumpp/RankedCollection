@@ -34,11 +34,29 @@ public class RankedCollection<T> : ICollection<RankedItem<T>> where T : notnull
 
     private int RankedItem_RankChanged(RankedItem item, int desiredRank)
     {
+        if(desiredRank < 1 )
+            desiredRank = 1;
+
+        if(desiredRank > Count)
+            desiredRank = Count;
+
+        bool goingUp = desiredRank < item.Rank;
+        //var shift = (int i) => i + (goingUp ? 1 : -1);
+
+        foreach (var ri in items)
+        {            
+              if(goingUp && ri.Rank >= desiredRank){
+                ri.SetRank(ri.Rank+1);
+            }
+        }
+        /*
+        // I think this can all be one loop - take the slot, ++, or --
         var displaced = items.Find(ri => ri.Rank == desiredRank);
         if (displaced is null)
             return item.Rank;
-
-        displaced.SetRank(item.Rank);
+        //don't want this swap, shift other items up or down
+         displaced.SetRank(item.Rank);
+         */
         return desiredRank;
     }
 
