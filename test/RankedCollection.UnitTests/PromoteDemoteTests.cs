@@ -1,5 +1,6 @@
 using EnhancedCollections;
 using FluentAssertions;
+using System.Linq;
 using Xunit;
 
 namespace RankedList.UnitTest;
@@ -70,6 +71,7 @@ public class PromoteDemoteTests
         hov.Rank.Should().Be(2);
         hov.Demote();
         hov.Rank.Should().Be(3);
+        sut.Select(x => x.Rank).Should().Equal(1, 2, 3);
     }
 
     [Fact]
