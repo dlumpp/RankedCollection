@@ -22,7 +22,7 @@ public class RankedCollection<T> : ICollection<RankedItem<T>> where T : notnull
     public bool Remove(RankedItem<T> item)
     {
         var i = items.Find(ri => ri.Value.Equals(item.Value));
-        if(i is RankedItem<T> ri)
+        if (i is RankedItem<T> ri)
         {
             ri.RankChanged -= RankedItem_RankChanged;
             items.Remove(i);
@@ -34,29 +34,30 @@ public class RankedCollection<T> : ICollection<RankedItem<T>> where T : notnull
 
     private int RankedItem_RankChanged(RankedItem item, int desiredRank)
     {
-        if(desiredRank < 1 )
+        if (desiredRank < 1)
             desiredRank = 1;
 
-        if(desiredRank > Count)
+        if (desiredRank > Count)
             desiredRank = Count;
 
-        bool goingUp = desiredRank < item.Rank;
-        //var shift = (int i) => i + (goingUp ? 1 : -1);
+        bool promoting = desiredRank < item.Rank;
+        bool demoting = desiredRank > item.Rank;
 
         foreach (var ri in items)
-        {            
-              if(goingUp && ri.Rank >= desiredRank){
-                ri.SetRank(ri.Rank+1);
+        {
+            if (ri.Rank == item.Rank)
+            {
+                continue;
+            }
+            if (promoting && ri.Rank < item.Rank)
+            {
+                ri.SetRank(ri.Rank + 1);
+            }
+            if (demoting && ri.Rank > item.Rank)
+            {
+                ri.SetRank(ri.Rank - 1);
             }
         }
-        /*
-        // I think this can all be one loop - take the slot, ++, or --
-        var displaced = items.Find(ri => ri.Rank == desiredRank);
-        if (displaced is null)
-            return item.Rank;
-        //don't want this swap, shift other items up or down
-         displaced.SetRank(item.Rank);
-         */
         return desiredRank;
     }
 
