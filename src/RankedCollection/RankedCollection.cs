@@ -25,14 +25,14 @@ public class RankedCollection<T> : ICollection<RankedItem<T>> where T : notnull
         if (i is RankedItem<T> ri)
         {
             ri.RankChanged -= RankedItem_RankChanged;
+            RankedItem_RankChanged(ri, null);
             items.Remove(i);
-            //TODO shift remaining ranks
             return true;
         }
         return false;
     }
 
-    private int RankedItem_RankChanged(RankedItem item, int desiredRank)
+    private int? RankedItem_RankChanged(RankedItem changingItem, int? desiredRank)
     {
         if (desiredRank < 1)
             desiredRank = 1;
@@ -40,22 +40,28 @@ public class RankedCollection<T> : ICollection<RankedItem<T>> where T : notnull
         if (desiredRank > Count)
             desiredRank = Count;
 
-        bool promoting = desiredRank < item.Rank;
-        bool demoting = desiredRank > item.Rank;
+        bool promoting = desiredRank < changingItem.Rank;
+        bool demoting = desiredRank > changingItem.Rank;
+        bool removing = desiredRank is null;
 
         foreach (var ri in items)
         {
-            if (ri.Rank == item.Rank)
+            if (ri == changingItem)
             {
                 continue;
             }
-            if (promoting && ri.Rank < item.Rank)
+
+            var isAbove = ri.Rank < changingItem.Rank;
+            var isBelow = ri.Rank > changingItem.Rank;
+
+            if (promoting && isAbove)
             {
-                ri.SetRank(ri.Rank + 1);
+                ri.SetRank(ri.Rank + 1); //demote
             }
-            if (demoting && ri.Rank > item.Rank)
+
+            if ((demoting || removing) && isBelow)
             {
-                ri.SetRank(ri.Rank - 1);
+                ri.SetRank(ri.Rank - 1); //promote
             }
         }
         return desiredRank;

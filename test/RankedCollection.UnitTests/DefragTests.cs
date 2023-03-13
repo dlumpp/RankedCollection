@@ -7,22 +7,46 @@ namespace RankedList.UnitTest;
 
 public class DefragTests
 {
-    [Fact]
-    public void RankBelowOneBecomesOne()
-    {
-        var sandwiches = new RankedCollection<string>()
+    readonly RankedCollection<string> _sut = new()
         {
             "Rueben",
             "Cubano",
             "Club"
         };
 
-        sandwiches[2].Rank = -1;
+    [Theory]
+    [InlineData("Rueben")]
+    [InlineData("Cubano")]
+    [InlineData("Club")]
+    public void RemovedRanksGetPlugged(string itemToRemove)
+    {
+        _sut.Remove(itemToRemove).Should().BeTrue();
+        AssertProperty.RanksAscendByOne(_sut);
+    }
 
-        sandwiches.Select(i => i.Value).Should().Equal(
+    [Fact]
+    public void RankBelowOneBecomesOne()
+    {
+        _sut[2].Rank = -1;
+
+        _sut.Select(i => i.Value).Should().Equal(
             "Club",
             "Rueben",
             "Cubano"
             );
+        AssertProperty.RanksAscendByOne(_sut);
+    }
+
+    [Fact]
+    public void RankBeyondCountBecomesBottom()
+    {
+        _sut[0].Rank = _sut.Count * 2;
+
+        _sut.Select(i => i.Value).Should().Equal(
+            "Cubano",
+            "Club",
+            "Rueben"
+            );
+        AssertProperty.RanksAscendByOne(_sut);
     }
 }
