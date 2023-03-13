@@ -22,9 +22,6 @@ public class PromoteDemoteTests
         "Notorious B.I.G."
     };
 
-    public void AssertRanksAscendByOne() => 
-        _sut.Select(x => x.Rank).Should().Equal(Enumerable.Range(1, _sut.Count));
-
     [Fact]
     public void ItemsAddInAscendingOrder()
     {
@@ -39,7 +36,7 @@ public class PromoteDemoteTests
         RankedItem<string> biggie = _sut[2];
         biggie.Rank.Should().Be(3);
         biggie.Value.Should().Be("Notorious B.I.G.");
-        AssertRanksAscendByOne();
+        AssertProperty.RanksAscendByOne(_sut);
     }
 
     [Fact]
@@ -49,7 +46,7 @@ public class PromoteDemoteTests
         hov.Rank.Should().Be(2);
         hov.Promote();
         hov.Rank.Should().Be(1);
-        AssertRanksAscendByOne();
+        AssertProperty.RanksAscendByOne(_sut);
     }
 
     [Fact]
@@ -60,7 +57,7 @@ public class PromoteDemoteTests
         biggie.Promote();
         biggie.Promote();
         biggie.Rank.Should().Be(1);
-        AssertRanksAscendByOne();
+        AssertProperty.RanksAscendByOne(_sut);
     }
 
     [Fact]
@@ -70,7 +67,7 @@ public class PromoteDemoteTests
         ye.Rank.Should().Be(1);
         ye.Promote();
         ye.Rank.Should().Be(1);
-        AssertRanksAscendByOne();
+        AssertProperty.RanksAscendByOne(_sut);
     }
 
     [Fact]
@@ -80,7 +77,7 @@ public class PromoteDemoteTests
         hov.Rank.Should().Be(2);
         hov.Demote();
         hov.Rank.Should().Be(3);
-        AssertRanksAscendByOne();
+        AssertProperty.RanksAscendByOne(_sut);
     }
 
     [Fact]
@@ -91,7 +88,7 @@ public class PromoteDemoteTests
         ye.Demote();
         ye.Demote();
         ye.Rank.Should().Be(3);
-        AssertRanksAscendByOne();
+        AssertProperty.RanksAscendByOne(_sut);
     }
 
     [Fact]
@@ -101,6 +98,6 @@ public class PromoteDemoteTests
         biggie.Rank.Should().Be(3);
         biggie.Demote();
         biggie.Rank.Should().Be(3);
-        AssertRanksAscendByOne();
+        AssertProperty.RanksAscendByOne(_sut);
     }
 }
