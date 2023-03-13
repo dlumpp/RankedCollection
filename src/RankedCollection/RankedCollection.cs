@@ -22,23 +22,48 @@ public class RankedCollection<T> : ICollection<RankedItem<T>> where T : notnull
     public bool Remove(RankedItem<T> item)
     {
         var i = items.Find(ri => ri.Value.Equals(item.Value));
-        if(i is RankedItem<T> ri)
+        if (i is RankedItem<T> ri)
         {
             ri.RankChanged -= RankedItem_RankChanged;
+            RankedItem_RankChanged(ri, null);
             items.Remove(i);
-            //TODO shift remaining ranks
             return true;
         }
         return false;
     }
 
-    private int RankedItem_RankChanged(RankedItem item, int desiredRank)
+    private int? RankedItem_RankChanged(RankedItem changingItem, int? desiredRank)
     {
-        var displaced = items.Find(ri => ri.Rank == desiredRank);
-        if (displaced is null)
-            return item.Rank;
+        if (desiredRank < 1)
+            desiredRank = 1;
 
-        displaced.SetRank(item.Rank);
+        if (desiredRank > Count)
+            desiredRank = Count;
+
+        bool promoting = desiredRank < changingItem.Rank;
+        bool demoting = desiredRank > changingItem.Rank;
+        bool removing = desiredRank is null;
+
+        foreach (var ri in items)
+        {
+            if (ri == changingItem)
+            {
+                continue;
+            }
+
+            var isAbove = ri.Rank < changingItem.Rank;
+            var isBelow = ri.Rank > changingItem.Rank;
+
+            if (promoting && isAbove)
+            {
+                ri.SetRank(ri.Rank + 1); //demote
+            }
+
+            if ((demoting || removing) && isBelow)
+            {
+                ri.SetRank(ri.Rank - 1); //promote
+            }
+        }
         return desiredRank;
     }
 
@@ -49,7 +74,7 @@ public class RankedCollection<T> : ICollection<RankedItem<T>> where T : notnull
     public void CopyTo(RankedItem<T>[] array, int arrayIndex) =>
         items.CopyTo(array, arrayIndex);
 
-    public IEnumerator<RankedItem<T>> GetEnumerator() => items.OrderByDescending(i => i.Rank).GetEnumerator();
+    public IEnumerator<RankedItem<T>> GetEnumerator() => items.OrderBy(i => i.Rank).GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }

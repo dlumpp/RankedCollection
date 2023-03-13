@@ -35,7 +35,7 @@ public class CollectionImplementationTests
     }
 
     [Fact]
-    public void EnumeratesInRankDescendingOrder()
+    public void EnumeratesInRankAscendingOrder()
     {
         var sut = new RankedCollection<string>() {
             "Turkey",
@@ -43,10 +43,10 @@ public class CollectionImplementationTests
             "Ham"
         };
         sut[1].Promote();
-        sut.Select(ri => ri.Value).Should().BeEquivalentTo(new[]{
+        sut.Select(ri => ri.Value).Should().Equal(
             "Bacon",
             "Turkey",
             "Ham"
-            });
+            );
     }
 }

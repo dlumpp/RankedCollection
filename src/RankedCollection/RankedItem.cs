@@ -10,7 +10,6 @@ public class RankedItem
         {
             if (value != _rank)
             {
-                //TODO: normalize entered rank if out of bounds
                 int? newRank = RankChanged?.Invoke(this, value);
                 if (newRank.HasValue)
                     _rank = newRank.Value;
@@ -22,7 +21,7 @@ public class RankedItem
     public void Demote() => Rank++;
 
     internal event RankChangedEvent? RankChanged;
-    internal delegate int RankChangedEvent(RankedItem item, int desiredRank);
+    internal delegate int? RankChangedEvent(RankedItem changingItem, int? desiredRank);
 
     /// <summary>
     /// Use to cascade rank shifts through list without firing infinite events
