@@ -3,6 +3,8 @@ using System.Linq;
 using EnhancedCollections;
 using FluentAssertions;
 
+namespace RankedList.UnitTest;
+
 public static class AssertProperty
 {
     public static void RanksAscendByOne<T>(ICollection<RankedItem<T>> rankedCollection) where T : notnull =>
