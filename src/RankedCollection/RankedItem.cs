@@ -40,5 +40,17 @@ public class RankedItem<T> : RankedItem where T : notnull
     }
 
     public static implicit operator T(RankedItem<T> rankedItem) => rankedItem.Value;
-    public static implicit operator RankedItem<T>(T value) => new (value);
+    public static implicit operator RankedItem<T>(T value) => new(value);
+
+    //TODO: override == too and stop doing Value selectss
+    public override bool Equals(object? obj)
+    {
+        if (obj is RankedItem<T> rankedItem)
+        {
+            return Value.Equals(rankedItem.Value);
+        }
+        return false;
+    }
+
+    public override int GetHashCode() => Value.GetHashCode();
 }

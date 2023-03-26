@@ -4,13 +4,11 @@ namespace EnhancedCollections;
 
 public class RankedCollection<T> : ICollection<RankedItem<T>> where T : notnull
 {
-    readonly List<RankedItem<T>> items = new();
+    readonly HashSet<RankedItem<T>> items = new();
 
     public int Count => items.Count();
 
     public bool IsReadOnly => false;
-
-    public RankedItem<T> this[int i] => items[i];
 
     public void Add(RankedItem<T> item)
     {
@@ -21,16 +19,18 @@ public class RankedCollection<T> : ICollection<RankedItem<T>> where T : notnull
 
     public bool Remove(RankedItem<T> item)
     {
-        var i = items.Find(ri => ri.Value.Equals(item.Value));
-        if (i is RankedItem<T> ri)
+        var i = items.RemoveWhere(ri => ri.Value.Equals(item.Value));
+        if (i > 0)
         {
-            ri.RankChanged -= RankedItem_RankChanged;
-            RankedItem_RankChanged(ri, null);
-            items.Remove(i);
+            item.RankChanged -= RankedItem_RankChanged;
+            RankedItem_RankChanged(item, null);
+            items.Remove(item);
             return true;
         }
         return false;
     }
+
+    public RankedItem<T>? Find(T item) => items.TryGetValue(item, out var rankedItem) ? rankedItem : null;
 
     private int? RankedItem_RankChanged(RankedItem changingItem, int? desiredRank)
     {
@@ -69,7 +69,7 @@ public class RankedCollection<T> : ICollection<RankedItem<T>> where T : notnull
 
     public void Clear() => items.Clear();
 
-    public bool Contains(RankedItem<T> item) => items.Find(ri => ri.Value.Equals(item.Value)) is not null;
+    public bool Contains(RankedItem<T> item) => items.Any(ri => ri.Value.Equals(item.Value));
 
     public void CopyTo(RankedItem<T>[] array, int arrayIndex) =>
         items.CopyTo(array, arrayIndex);
