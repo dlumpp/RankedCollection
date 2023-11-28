@@ -27,7 +27,7 @@ public class DefragTests
     [Fact]
     public void RankBelowOneBecomesOne()
     {
-        _sut[2].Rank = -1;
+        _sut.Find("Club")!.Rank = -1;
 
         _sut.Select(i => i.Value).Should().Equal(
             "Club",
@@ -40,7 +40,7 @@ public class DefragTests
     [Fact]
     public void RankBeyondCountBecomesBottom()
     {
-        _sut[0].Rank = _sut.Count * 2;
+        _sut.Find("Rueben")!.Rank = _sut.Count * 2;
 
         _sut.Select(i => i.Value).Should().Equal(
             "Cubano",

@@ -25,15 +25,15 @@ public class PromoteDemoteTests
     [Fact]
     public void ItemsAddInAscendingOrder()
     {
-        RankedItem<string> ye = _sut[0];
+        RankedItem<string> ye = _sut.Find("Kanye")!;
         ye.Rank.Should().Be(1);
         ye.Value.Should().Be("Kanye");
 
-        RankedItem<string> hov = _sut[1];
+        RankedItem<string> hov = _sut.Find("Jay-Z")!;
         hov.Rank.Should().Be(2);
         hov.Value.Should().Be("Jay-Z");
 
-        RankedItem<string> biggie = _sut[2];
+        RankedItem<string> biggie = _sut.Find("Notorious B.I.G.")!;
         biggie.Rank.Should().Be(3);
         biggie.Value.Should().Be("Notorious B.I.G.");
         AssertProperty.RanksAscendByOne(_sut);
@@ -42,7 +42,7 @@ public class PromoteDemoteTests
     [Fact]
     public void PromoteOnce()
     {
-        RankedItem<string> hov = _sut[1];
+        RankedItem<string> hov = _sut.Find("Jay-Z")!;
         hov.Rank.Should().Be(2);
         hov.Promote();
         hov.Rank.Should().Be(1);
@@ -52,7 +52,7 @@ public class PromoteDemoteTests
     [Fact]
     public void PromoteTwiceInBounds()
     {
-        RankedItem<string> biggie = _sut[2];
+        RankedItem<string> biggie = _sut.Find("Notorious B.I.G.")!;
         biggie.Rank.Should().Be(3);
         biggie.Promote();
         biggie.Promote();
@@ -63,7 +63,7 @@ public class PromoteDemoteTests
     [Fact]
     public void PromoteOnceOutOfBounds()
     {
-        RankedItem<string> ye = _sut[0];
+        RankedItem<string> ye = _sut.Find("Kanye")!;
         ye.Rank.Should().Be(1);
         ye.Promote();
         ye.Rank.Should().Be(1);
@@ -73,7 +73,7 @@ public class PromoteDemoteTests
     [Fact]
     public void DemoteOnce()
     {
-        RankedItem<string> hov = _sut[1];
+        RankedItem<string> hov = _sut.Find("Jay-Z")!;
         hov.Rank.Should().Be(2);
         hov.Demote();
         hov.Rank.Should().Be(3);
@@ -83,7 +83,7 @@ public class PromoteDemoteTests
     [Fact]
     public void DemoteTwiceInBounds()
     {
-        RankedItem<string> ye = _sut[0];
+        RankedItem<string> ye = _sut.Find("Kanye")!;
         ye.Rank.Should().Be(1);
         ye.Demote();
         ye.Demote();
@@ -94,7 +94,7 @@ public class PromoteDemoteTests
     [Fact]
     public void DemoteOnceOutOfBounds()
     {
-        RankedItem<string> biggie = _sut[2];
+        RankedItem<string> biggie = _sut.Find("Notorious B.I.G.")!;
         biggie.Rank.Should().Be(3);
         biggie.Demote();
         biggie.Rank.Should().Be(3);
