@@ -4,33 +4,34 @@ namespace EnhancedCollections;
 
 public class RankedCollection<T> : ICollection<RankedItem<T>> where T : notnull
 {
-    readonly List<RankedItem<T>> items = new();
+    readonly HashSet<RankedItem<T>> items = new();
 
-    public int Count => items.Count();
+    public int Count => items.Count;
 
     public bool IsReadOnly => false;
-
-    public RankedItem<T> this[int i] => items[i];
 
     public void Add(RankedItem<T> item)
     {
         item.SetRank(items.Count + 1);
         item.RankChanged += RankedItem_RankChanged;
-        items.Add(item);
+        if (!items.Add(item))
+            throw new InvalidAddException<T>(item, "Collection already contains an equivalent item.");
     }
 
     public bool Remove(RankedItem<T> item)
     {
-        var i = items.Find(ri => ri.Value.Equals(item.Value));
-        if (i is RankedItem<T> ri)
+        RankedItem<T>? maybeItemToRemove = Find(item);
+        if(maybeItemToRemove is RankedItem<T> itemToRemove)
         {
-            ri.RankChanged -= RankedItem_RankChanged;
-            RankedItem_RankChanged(ri, null);
-            items.Remove(i);
+            itemToRemove.RankChanged -= RankedItem_RankChanged;
+            RankedItem_RankChanged(itemToRemove, null);
+            items.Remove(itemToRemove);
             return true;
         }
         return false;
     }
+
+    public RankedItem<T>? Find(T item) => items.TryGetValue(item, out var rankedItem) ? rankedItem : null;
 
     private int? RankedItem_RankChanged(RankedItem changingItem, int? desiredRank)
     {
@@ -46,7 +47,7 @@ public class RankedCollection<T> : ICollection<RankedItem<T>> where T : notnull
 
         foreach (var ri in items)
         {
-            if (ri == changingItem)
+            if (ri.Equals(changingItem))
             {
                 continue;
             }
@@ -69,7 +70,7 @@ public class RankedCollection<T> : ICollection<RankedItem<T>> where T : notnull
 
     public void Clear() => items.Clear();
 
-    public bool Contains(RankedItem<T> item) => items.Find(ri => ri.Value.Equals(item.Value)) is not null;
+    public bool Contains(RankedItem<T> item) => items.Any(ri => ri == item);
 
     public void CopyTo(RankedItem<T>[] array, int arrayIndex) =>
         items.CopyTo(array, arrayIndex);

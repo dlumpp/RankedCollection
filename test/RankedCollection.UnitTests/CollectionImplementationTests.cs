@@ -42,7 +42,7 @@ public class CollectionImplementationTests
             "Bacon",
             "Ham"
         };
-        sut[1].Promote();
+        sut.Find("Bacon")!.Promote();
         sut.Select(ri => ri.Value).Should().Equal(
             "Bacon",
             "Turkey",
