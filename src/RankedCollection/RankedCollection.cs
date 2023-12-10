@@ -6,7 +6,7 @@ public class RankedCollection<T> : ICollection<RankedItem<T>> where T : notnull
 {
     readonly HashSet<RankedItem<T>> items = new();
 
-    public int Count => items.Count();
+    public int Count => items.Count;
 
     public bool IsReadOnly => false;
 
