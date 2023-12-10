@@ -5,6 +5,14 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>EnhancedCollections</RootNamespace>
+
+    <PackageId>EnhancedCollections.RankedCollection</PackageId>
+    <Authors>Dan Lumpp</Authors>
+    <Description>A collection that allows for simple, dynamic, logical, re-ordering of contained items</Description>
+    <PackageDescription>A collection that allows for simple, dynamic, logical, re-ordering of contained items</PackageDescription>
+    <RepositoryUrl>https://github.com/dlumpp/RankedCollection</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/dlumpp/RankedCollection</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
 </Project>
