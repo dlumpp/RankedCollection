@@ -47,7 +47,7 @@ public class RankedCollection<T> : ICollection<RankedItem<T>> where T : notnull
 
         foreach (var ri in items)
         {
-            if (ri == changingItem)
+            if (ri.Equals(changingItem))
             {
                 continue;
             }
@@ -70,7 +70,7 @@ public class RankedCollection<T> : ICollection<RankedItem<T>> where T : notnull
 
     public void Clear() => items.Clear();
 
-    public bool Contains(RankedItem<T> item) => items.Any(ri => ri.Value.Equals(item.Value));
+    public bool Contains(RankedItem<T> item) => items.Any(ri => ri == item);
 
     public void CopyTo(RankedItem<T>[] array, int arrayIndex) =>
         items.CopyTo(array, arrayIndex);

@@ -42,7 +42,9 @@ public class RankedItem<T> : RankedItem where T : notnull
     public static implicit operator T(RankedItem<T> rankedItem) => rankedItem.Value;
     public static implicit operator RankedItem<T>(T value) => new(value);
 
-    //TODO: override == too and stop doing Value selectss
+    public static bool operator == (RankedItem<T> i1, RankedItem<T> i2) => i1.Equals(i2);
+    public static bool operator !=(RankedItem<T> i1, RankedItem<T> i2) => !i1.Equals(i2);
+
     public override bool Equals(object? obj)
     {
         if (obj is RankedItem<T> rankedItem)
