@@ -20,12 +20,12 @@ public class RankedCollection<T> : ICollection<RankedItem<T>> where T : notnull
 
     public bool Remove(RankedItem<T> item)
     {
-        var i = items.RemoveWhere(ri => ri.Value.Equals(item.Value));
-        if (i > 0)
+        RankedItem<T>? maybeItemToRemove = Find(item);
+        if(maybeItemToRemove is RankedItem<T> itemToRemove)
         {
-            item.RankChanged -= RankedItem_RankChanged;
-            RankedItem_RankChanged(item, null);
-            items.Remove(item);
+            itemToRemove.RankChanged -= RankedItem_RankChanged;
+            RankedItem_RankChanged(itemToRemove, null);
+            items.Remove(itemToRemove);
             return true;
         }
         return false;
