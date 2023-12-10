@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using EnhancedCollections;
 using FluentAssertions;
 using Xunit;
@@ -18,10 +18,26 @@ public class DefragTests
     [InlineData("Rueben")]
     [InlineData("Cubano")]
     [InlineData("Club")]
-    public void RemovedRanksGetPlugged(string itemToRemove)
+    public void WhenRemovingByValue_ThenRanksGetPlugged(string itemToRemove)
     {
         _sut.Remove(itemToRemove).Should().BeTrue();
         AssertProperty.RanksAscendByOne(_sut);
+    }
+
+    [Theory]
+    [InlineData("Rueben")]
+    [InlineData("Cubano")]
+    [InlineData("Club")]
+    public void WhenRemovingByItem_ThenRanksGetPlugged(string itemToRemove)
+    {
+        _sut.Remove(_sut.Find(itemToRemove)!).Should().BeTrue();
+        AssertProperty.RanksAscendByOne(_sut);
+    }
+
+    [Fact]
+    public void WhenNoItemFoundToRemove_ThenReturnFalse()
+    {
+        _sut.Remove("Monte Cristo").Should().BeFalse();
     }
 
     [Fact]
@@ -46,6 +62,23 @@ public class DefragTests
             "Cubano",
             "Club",
             "Rueben"
+            );
+        AssertProperty.RanksAscendByOne(_sut);
+    }
+
+    [Fact]
+    public void ReassignedItemChangesAllRanks()
+    {
+        _sut.Add("Lobster Roll");
+        var newItem = _sut.Find("Lobster Roll");
+        newItem!.Rank.Should().Be(_sut.Count);
+        newItem!.Rank = 1;
+
+        _sut.Select(i => i.Value).Should().Equal(
+            "Lobster Roll",
+            "Rueben",
+            "Cubano",
+            "Club"
             );
         AssertProperty.RanksAscendByOne(_sut);
     }
