@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using EnhancedCollections;
 using FluentAssertions;
 using Xunit;
@@ -13,6 +13,8 @@ public class DuplicateTests
         var sut = new RankedCollection<bool>();
         sut.Add(true);
         Action act = () => sut.Add(true);
-        act.Should().Throw<Exception>();
+        act.Should().Throw<InvalidAddException<bool>>()
+            .WithMessage("Collection already contains an equivalent item.")
+            .And.InvalidItem.Value.Should().Be(true);
     }
 }

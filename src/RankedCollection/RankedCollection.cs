@@ -14,7 +14,8 @@ public class RankedCollection<T> : ICollection<RankedItem<T>> where T : notnull
     {
         item.SetRank(items.Count + 1);
         item.RankChanged += RankedItem_RankChanged;
-        items.Add(item);
+        if (!items.Add(item))
+            throw new InvalidAddException<T>(item, "Collection already contains an equivalent item.");
     }
 
     public bool Remove(RankedItem<T> item)
