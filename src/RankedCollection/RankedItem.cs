@@ -53,4 +53,6 @@ public class RankedItem<T> : RankedItem where T : notnull
     }
 
     public override int GetHashCode() => Value.GetHashCode();
+
+    public override string ToString() => $"{Rank}. {Value}";
 }
